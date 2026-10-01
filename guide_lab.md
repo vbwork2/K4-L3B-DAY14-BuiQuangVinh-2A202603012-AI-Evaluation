@@ -31,9 +31,7 @@ Nó không thay thế `domain_assistant.py` và không tạo 20 actual answers c
 `evaluate_answers.py` đọc golden dataset và actual answers đã lưu, sau đó đưa
 chúng vào `BenchmarkRunner` và `RAGASEvaluator` trong `template.py`.
 
-Nó chỉ làm I/O và format Exercise 3.2; nó không viết lại evaluation metrics.
-
----
+Nó chỉ làm I/O và format Exercise 3.2; nó không viết lại evaluation metrics. 
 
 ## 1. Tạo repo cá nhân
 
@@ -145,8 +143,7 @@ Nếu terminal báo `command not found`, `ModuleNotFoundError` hoặc không col
 
 ### 3.2 Làm Part 1 trong worksheet
 
-Mở `exercises.md`, hoàn thành **Part 1 — Warm-up** gồm Exercises 1.1–1.3. Part
-này chỉ yêu cầu phân tích metrics, bias và CI/CD; chưa sửa `template.py`.
+Mở `exercises.md`, hoàn thành **Part 1 — Warm-up** gồm Exercises 1.1–1.3. Part này chỉ yêu cầu phân tích metrics, bias và CI/CD; chưa sửa `template.py`.
 
 Sau khi điền xong Part 1, quay lại Mục 4 của guide và làm **Part 2 — Core
 Coding**. Từ đây nên mở song song hai file:
@@ -162,7 +159,7 @@ Coding**. Từ đây nên mở song song hai file:
 đây. Mỗi Task xong phải chạy targeted test tương ứng ở Mục 4.9.
 
 Mở `template.py` và dùng tìm kiếm toàn project của editor với từ khóa `# TODO`.
-Nếu muốn tìm bằng terminal:
+Nếu muốn tìm bằng terminal: 
 
 ```bash
 # macOS/Linux
