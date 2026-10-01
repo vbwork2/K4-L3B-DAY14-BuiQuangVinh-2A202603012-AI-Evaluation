@@ -273,19 +273,19 @@ Chỉ làm sau khi hoàn thành 3.1–3.3. Chọn hai framework trong RAGAS, Dee
 và TruLens; chạy hoặc thiết kế một so sánh có cùng input dataset.
 
 
-| Tiêu chí                    | Framework 1: ____ | Framework 2: ____ |
+| Tiêu chí                    | Framework 1: RAGAS 0.4.3 | Framework 2: DeepEval 2.9.3 |
 | ----------------------------- | ----------------- | ----------------- |
-| Setup complexity              |                   |                   |
-| Metrics available             |                   |                   |
-| CI/CD integration             |                   |                   |
-| Kết quả trên cùng dataset |                   |                   |
-| Insight rút ra               |                   |                   |
+| Setup complexity              | SDK + judge/API key; cần pin LangChain tương thích để import thành công. | SDK + judge/API key; dùng LLMTestCase và metric riêng, thêm timeout cho API. |
+| Metrics available             | Faithfulness, Response Relevancy, Context Recall/Precision ([docs](https://docs.ragas.io/en/latest/concepts/metrics/available_metrics/)). | Faithfulness, Answer Relevancy, Contextual Recall/Precision ([docs](https://deepeval.com/docs/metrics-introduction)). |
+| CI/CD integration             | Gọi metric trong script/pytest, tự đặt threshold để gate. | Có assert_test và deepeval test run để gate theo threshold ([docs](https://deepeval.com/docs/evaluation-unit-testing-in-ci-cd)). |
+| Kết quả trên cùng dataset | Faithfulness 0.874 trên 15 cases chung; Context Precision 0.948 trên 20 cases. | Faithfulness 0.837 trên 15 cases chung; Contextual Precision 0.968 trên 20 cases. |
+| Insight rút ra               | H01 Faithfulness 0.000: judge bỏ qua ngày giao do khách cung cấp trong question. | M02 Faithfulness 0.500: lý do judge có dấu hiệu false-fail so với evidence về discount. |
 
 - Scores có nhất quán không?
 - Framework nào strict hơn và vì sao?
 - Hai framework có tìm ra cùng failure cases không?
 
-> *Phân tích:*
+> *Phân tích:* Dùng cùng 20 traces, judge gpt-4o-mini, temperature 0, threshold 0.7. DeepEval Faithfulness timeout ở E02/E03/E04/E05/A02 sau retry, nên so sánh trên 15 cases hợp lệ chung; Precision đủ 20. Scores không hoàn toàn nhất quán: DeepEval strict hơn về Faithfulness trong lần chạy này (4 fail so với 2) vì judge gán mâu thuẫn ở M02/H03 mà RAGAS chấp nhận; RAGAS có Precision thấp hơn. Cả hai fail H01/H02; DeepEval thêm 02/H03..
 
 ### Exercise 3.5 — Retrieval Reranking (Bonus +5)
 
@@ -301,20 +301,20 @@ thay đổi Context Recall hay không.
 
 | ID      | Recall before | Recall after | Precision before | Precision after | Delta Precision |
 | ------- | ------------: | -----------: | ---------------: | --------------: | --------------: |
-|         |               |              |                  |                 |                 |
-|         |               |              |                  |                 |                 |
-|         |               |              |                  |                 |                 |
-|         |               |              |                  |                 |                 |
-|         |               |              |                  |                 |                 |
-| **Avg** |               |              |                  |                 |                 |
+| E01     | 0.923 | 0.923 | 0.867 | 0.917 | +0.050 |
+| E03     | 0.833 | 0.833 | 0.950 | 1.000 | +0.050 |
+| M05     | 0.947 | 0.947 | 0.887 | 0.887 | 0.000 |
+| A01     | 0.588 | 0.588 | 0.806 | 0.806 | 0.000 |
+| A02     | 0.833 | 0.833 | 0.867 | 0.867 | 0.000 |
+| **Avg** | 0.825 | 0.825 | 0.875 | 0.895 | +0.020 |
 
 **Tại sao Recall dự kiến không đổi?**
 
-> *Câu trả lời:*
+> *Câu trả lời:* Rerank chỉ đổi thứ tự, giữ nguyên toàn bộ chunks nên lượng thông tin được retrieval không đổi. Chạy overlap reranker theo câu hỏi trên 5 cases cho Recall giữ nguyên 0.825; Precision tăng 0.020 do chunks liên quan được đưa lên trước (`artifacts/reranking_results.json`).
 
 **Khi nào reranking không đủ và cần sửa retriever/query/chunking?**
 
-> *Câu trả lời:*
+> *Câu trả lời:* Khi tập chunks thiếu policy/phiên bản cần trả lời, reranking không bổ sung được thông tin. Cần sửa query/retriever nếu lấy sai tài liệu, hoặc chunking nếu cắt mất điều kiện và ngoại lệ; A01 Recall 0.588 không tăng sau rerank.
 
 ---
 
@@ -328,11 +328,11 @@ Hoàn thành `reflection.md` bằng kết quả thật từ Exercise 3.2.
 
 Hoàn thành kiểm tra cuối trong khoảng 11:50–12:00.
 
-- [ ]  Tất cả required tests pass.
-- [ ]  `golden_dataset.json` validate thành công.
-- [ ]  Exercise 3.1 hoàn thành trong file JSON và bảng kết quả phía trên.
-- [ ]  Exercise 3.2 có năm metrics, aggregate report và ba cases thấp nhất.
-- [ ]  Exercise 3.3 có rubric 1–5 và bias controls.
-- [ ]  `reflection.md` có ba failure analyses và regression strategy.
-- [ ]  Đã copy `template.py` thành `solution/solution.py`.
-- [ ]  Exercise 3.4 và 3.5 chỉ làm nếu chọn bonus.
+- [x]  Tất cả required tests pass.
+- [x]  `golden_dataset.json` validate thành công.
+- [x]  Exercise 3.1 hoàn thành trong file JSON và bảng kết quả phía trên.
+- [x]  Exercise 3.2 có năm metrics, aggregate report và ba cases thấp nhất.
+- [x]  Exercise 3.3 có rubric 1–5 và bias controls.
+- [x]  `reflection.md` có ba failure analyses và regression strategy.
+- [x]  Đã copy `template.py` thành `solution/solution.py`.
+- [x]  Exercise 3.4 và 3.5 chỉ làm nếu chọn bonus.
